@@ -1,0 +1,145 @@
+/*
+ * BD SOURCING HUT — Premium cursor & scroll progress
+ * Loaded on public and admin layouts. No dependencies, no interaction blocking.
+ * The system cursor stays unchanged on touch devices, text-entry controls,
+ * reduced-motion settings, or when JavaScript is disabled.
+ */
+.bd-cursor-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  pointer-events: none !important;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.bd-cursor-dot,
+.bd-cursor-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none !important;
+  opacity: 0;
+  will-change: transform;
+  transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+}
+
+.bd-cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--c-accent, #d9bc83);
+  box-shadow: 0 0 13px rgba(217, 188, 131, .60);
+  transition: opacity 170ms ease, width 230ms ease, height 230ms ease;
+}
+
+.bd-cursor-ring {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--c-accent, #d9bc83);
+  background: rgba(217, 188, 131, .055);
+  box-shadow: 0 0 0 1px rgba(217, 188, 131, .09), 0 0 30px rgba(217, 188, 131, .10);
+  transition: opacity 180ms ease, width 280ms cubic-bezier(.22,.68,0,1), height 280ms cubic-bezier(.22,.68,0,1),
+              background 280ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.bd-cursor-label {
+  font: 700 10px/1 var(--font-body, Manrope, Arial, sans-serif);
+  letter-spacing: .12em;
+  color: var(--c-accent, #d9bc83);
+  white-space: nowrap;
+  opacity: 0;
+  transform: scale(.7);
+  transition: opacity 180ms ease, transform 260ms ease;
+}
+
+body.bd-cursor-active .bd-cursor-layer { visibility: visible; }
+body.bd-cursor-active:not(.bd-cursor-in-field) .bd-cursor-dot,
+body.bd-cursor-active:not(.bd-cursor-in-field) .bd-cursor-ring { opacity: 1; }
+
+/* Replace the arrow cursor only while our visual pointer is active. */
+body.bd-cursor-active { cursor: none; }
+body.bd-cursor-active a,
+body.bd-cursor-active button,
+body.bd-cursor-active summary,
+body.bd-cursor-active [role="button"],
+body.bd-cursor-active [data-cursor-label] { cursor: none !important; }
+
+/* Native pointer / I-beam is essential when users select text and edit forms. */
+body.bd-cursor-active input,
+body.bd-cursor-active textarea,
+body.bd-cursor-active select,
+body.bd-cursor-active [contenteditable],
+body.bd-cursor-active [role="textbox"] { cursor: auto !important; }
+body.bd-cursor-active input:is([type="text"], [type="email"], [type="password"], [type="search"], [type="url"], [type="tel"], [type="number"]),
+body.bd-cursor-active textarea,
+body.bd-cursor-active [contenteditable],
+body.bd-cursor-active [role="textbox"] { cursor: text !important; }
+body.bd-cursor-active input:is([type="button"], [type="submit"], [type="reset"]) { cursor: none !important; }
+
+.bd-cursor-layer.is-interactive .bd-cursor-ring {
+  width: 68px;
+  height: 68px;
+  background: rgba(217, 188, 131, .17);
+  border-color: var(--c-accent, #d9bc83);
+  box-shadow: 0 0 0 5px rgba(217, 188, 131, .05), 0 0 35px rgba(217, 188, 131, .16);
+}
+.bd-cursor-layer.is-interactive .bd-cursor-dot { width: 2px; height: 2px; opacity: 0 !important; }
+.bd-cursor-layer.is-interactive .bd-cursor-label { opacity: 1; transform: scale(1); }
+
+.bd-cursor-layer.is-scrolling .bd-cursor-ring {
+  width: 53px;
+  height: 53px;
+  border-color: #f4d69e;
+  box-shadow: 0 0 0 10px rgba(217, 188, 131, .045), 0 0 36px rgba(217, 188, 131, .17);
+}
+.bd-cursor-layer.is-scrolling.is-interactive .bd-cursor-ring { width: 68px; height: 68px; }
+.bd-cursor-layer.is-pressed .bd-cursor-ring {
+  width: 30px;
+  height: 30px;
+  background: rgba(217, 188, 131, .30);
+  box-shadow: 0 0 0 14px rgba(217, 188, 131, .07);
+}
+
+/* Thin visual progress line across the top of public-facing pages. */
+.bd-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 2147482000;
+  pointer-events: none;
+  overflow: hidden;
+}
+.bd-scroll-progress__line {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, #a98756, var(--c-accent, #d9bc83), #fff1d4);
+  box-shadow: 0 0 14px rgba(217, 188, 131, .55);
+  will-change: transform;
+}
+
+/* The dashboard uses a quieter cursor so tables and controls stay readable. */
+body.admin-body .bd-cursor-layer.is-interactive .bd-cursor-ring { width: 56px; height: 56px; }
+body.admin-body .bd-cursor-label { font-size: 9px; }
+body.admin-body .bd-cursor-layer.is-pressed .bd-cursor-ring { width: 27px; height: 27px; }
+
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .bd-cursor-layer,
+  .bd-scroll-progress { display: none !important; }
+  body.bd-cursor-active,
+  body.bd-cursor-active a,
+  body.bd-cursor-active button,
+  body.bd-cursor-active summary,
+  body.bd-cursor-active [role="button"] { cursor: auto !important; }
+}
+@media (prefers-contrast: more) {
+  .bd-cursor-ring { background: transparent; border-width: 2px; box-shadow: none; }
+  .bd-cursor-dot { box-shadow: none; }
+}

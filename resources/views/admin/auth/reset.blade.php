@@ -1,0 +1,3 @@
+@extends('admin.layouts.app')
+@section('title','Choose New Password')
+@section('content')<div class="page-heading"><div><span class="mini-label">ACCOUNT RECOVERY</span><h1>New password</h1></div></div><div class="panel narrow"><form method="POST" action="{{ route('admin.password.update') }}" class="admin-form">@csrf<input type="hidden" name="token" value="{{ $token }}"><label>Email<input type="email" name="email" required value="{{ old('email',$email) }}"></label><label>New password (12+ characters)<input type="password" name="password" required minlength="12"></label><label>Confirm password<input type="password" name="password_confirmation" required minlength="12"></label><button class="admin-button">Update password ↗</button></form></div>@endsection

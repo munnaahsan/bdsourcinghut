@@ -1,0 +1,71 @@
+<?php
+
+use App\Http\Controllers\Admin\{ContentController,DashboardController,InquiryController as AdminInquiryController,MediaController,MenuController,ProcessController,SectionController,SettingController,UserController};
+use App\Http\Controllers\Auth\AdminAuthController;
+use App\Http\Controllers\Frontend\{InquiryController,SiteController};
+use Illuminate\Support\Facades\Route;
+
+Route::get('/',[SiteController::class,'home'])->name('home');
+Route::get('/about',[SiteController::class,'about'])->name('about');
+Route::get('/services',[SiteController::class,'services'])->name('services.index');
+Route::get('/services/{slug}',[SiteController::class,'service'])->name('services.show');
+Route::get('/collections',[SiteController::class,'collections'])->name('collections.index');
+Route::get('/collections/{slug}',[SiteController::class,'collection'])->name('collections.show');
+Route::get('/contact',[SiteController::class,'contact'])->name('contact');
+Route::post('/contact',[InquiryController::class,'store'])->middleware('throttle:5,1')->name('contact.submit');
+Route::get('/pages/{slug}',[SiteController::class,'generic'])->name('pages.show');
+Route::get('/sitemap.xml',[SiteController::class,'sitemap'])->name('sitemap');
+Route::get('/robots.txt',[SiteController::class,'robots']);
+
+Route::middleware('guest')->prefix('admin')->name('admin.')->group(function(){
+ Route::get('/login',[AdminAuthController::class,'form'])->name('login');
+ Route::post('/login',[AdminAuthController::class,'login'])->middleware('throttle:10,1')->name('login.submit');
+ Route::get('/forgot-password',[AdminAuthController::class,'forgot'])->name('password.request');
+ Route::post('/forgot-password',[AdminAuthController::class,'sendReset'])->middleware('throttle:3,1')->name('password.email');
+ Route::get('/reset-password/{token}',[AdminAuthController::class,'resetForm'])->name('password.reset');
+ Route::post('/reset-password',[AdminAuthController::class,'reset'])->name('password.update');
+});
+Route::middleware(['auth','admin'])->prefix('admin')->name('admin.')->group(function(){
+ Route::post('/logout',[AdminAuthController::class,'logout'])->name('logout');
+ Route::get('/',DashboardController::class)->name('dashboard');
+ Route::get('/homepage',[SectionController::class,'homepage'])->name('homepage');
+ Route::get('/page-sections/{slug}',[SectionController::class,'index'])->name('sections.index');
+ Route::get('/page-sections/{slug}/create',[SectionController::class,'create'])->name('sections.create');
+ Route::post('/page-sections/{slug}',[SectionController::class,'store'])->name('sections.store');
+ Route::get('/sections/{section}/edit',[SectionController::class,'edit'])->name('sections.edit');
+ Route::put('/sections/{section}',[SectionController::class,'update'])->name('sections.update');
+ Route::delete('/sections/{section}',[SectionController::class,'destroy'])->name('sections.destroy');
+ Route::get('/sections/{section}/preview',[SectionController::class,'preview'])->name('sections.preview');
+ Route::get('/process',[ProcessController::class,'index'])->name('process.index');
+ Route::post('/process',[ProcessController::class,'store'])->name('process.store');
+ Route::put('/process/{step}',[ProcessController::class,'update'])->name('process.update');
+ Route::delete('/process/{step}',[ProcessController::class,'destroy'])->name('process.destroy');
+ Route::get('/media',[MediaController::class,'index'])->name('media.index');
+ Route::post('/media',[MediaController::class,'store'])->name('media.store');
+ Route::put('/media/{medium}',[MediaController::class,'update'])->name('media.update');
+ Route::delete('/media/{medium}',[MediaController::class,'destroy'])->name('media.destroy');
+ Route::get('/menus',[MenuController::class,'index'])->name('menus.index');
+ Route::post('/menus',[MenuController::class,'store'])->name('menus.store');
+ Route::put('/menus/{item}',[MenuController::class,'update'])->name('menus.update');
+ Route::delete('/menus/{item}',[MenuController::class,'destroy'])->name('menus.destroy');
+ Route::get('/settings',[SettingController::class,'index'])->name('settings.index');
+ Route::put('/settings',[SettingController::class,'update'])->name('settings.update');
+ Route::get('/footer',[SettingController::class,'footer'])->name('footer');
+ Route::get('/seo',[SettingController::class,'seo'])->name('seo');
+ Route::get('/theme',[SettingController::class,'theme'])->name('theme.index');
+ Route::put('/theme',[SettingController::class,'saveTheme'])->name('theme.update');
+ Route::get('/inquiries',[AdminInquiryController::class,'index'])->name('inquiries.index');
+ Route::get('/inquiries/export',[AdminInquiryController::class,'export'])->name('inquiries.export');
+ Route::get('/inquiries/{inquiry}',[AdminInquiryController::class,'show'])->name('inquiries.show');
+ Route::put('/inquiries/{inquiry}',[AdminInquiryController::class,'update'])->name('inquiries.update');
+ Route::get('/users',[UserController::class,'index'])->name('users.index');
+ Route::post('/users',[UserController::class,'store'])->name('users.store');
+ Route::put('/users/{user}',[UserController::class,'update'])->name('users.update');
+ Route::delete('/users/{user}',[UserController::class,'destroy'])->name('users.destroy');
+ Route::get('/{type}',[ContentController::class,'index'])->whereIn('type',['pages','services','collections'])->name('content.index');
+ Route::get('/{type}/create',[ContentController::class,'create'])->whereIn('type',['pages','services','collections'])->name('content.create');
+ Route::post('/{type}',[ContentController::class,'store'])->whereIn('type',['pages','services','collections'])->name('content.store');
+ Route::get('/{type}/{id}/edit',[ContentController::class,'edit'])->whereIn('type',['pages','services','collections'])->name('content.edit');
+ Route::put('/{type}/{id}',[ContentController::class,'update'])->whereIn('type',['pages','services','collections'])->name('content.update');
+ Route::delete('/{type}/{id}',[ContentController::class,'destroy'])->whereIn('type',['pages','services','collections'])->name('content.destroy');
+});

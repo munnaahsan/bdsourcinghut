@@ -1,0 +1,1 @@
+<section class="mini-cta"><div class="container"><div><span class="eyebrow gold">LET'S COLLABORATE</span><h2>AN IDEA WORTH<br><em>EXPLORING?</em></h2></div><a class="btn btn-gold" href="{{ route('contact') }}">START A PROJECT <span>↗</span></a></div></section>

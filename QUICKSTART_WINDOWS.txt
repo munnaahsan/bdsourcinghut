@@ -1,0 +1,27 @@
+BD SOURCING HUT - WINDOWS QUICK START
+===================================
+
+Requirements: PHP 8.2+ with required Laravel extensions; Composer 2; MySQL/MariaDB.
+The application source is complete but PHP Composer dependencies are NOT bundled.
+
+1. Extract the project ZIP and open PowerShell inside the bd-sourcing-hut folder.
+2. composer install
+3. Copy-Item .env.example .env
+4. php artisan key:generate
+5. Create an empty database named bd_sourcing_hut in MySQL.
+6. Edit .env with your MySQL host, database, username and password.
+7. php artisan migrate --seed
+8. php artisan storage:link
+9. php artisan app:create-admin
+10. php artisan serve
+
+PUBLIC WEBSITE: http://localhost:8000/
+ADMIN LOGIN:    http://localhost:8000/admin/login
+
+You can now edit all seeded public content and images via the dashboard.
+For production deployment, set APP_DEBUG=false, APP_ENV=production, HTTPS,
+a verified mail service, backups and a secure web server public/ document root.
+See README.md for the full guide, security details and testing instructions.
+
+IMPORTANT: Migrations/tests have not been run in the build environment
+because Composer and required PHP extensions were unavailable there.

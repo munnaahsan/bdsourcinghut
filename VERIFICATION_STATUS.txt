@@ -1,0 +1,22 @@
+BD SOURCING HUT - SOURCE VALIDATION REPORT
+=========================================
+
+PERFORMED IN THE BUILD ENVIRONMENT:
+- PHP source static syntax: PASS
+- JavaScript syntax parse: PASS
+- Blade view reference existence: PASS
+- Named-route reference existence: PASS
+- composer.json / phpunit.xml parsing: PASS
+- 24 expected JPG assets, all files present: PASS
+- 24 matching WebP derivatives: PASS
+- Basic JPG validity via signatures: PASS
+
+NOT PERFORMED IN THE BUILD ENVIRONMENT:
+- Composer dependency installation (no Composer / external network access)
+- Laravel artisan boot and route:list
+- Running database migrations and seeders against MySQL
+- HTTP integration tests / authentication and mail flows
+- Browser screenshots, mobile viewport QA and user acceptance testing
+
+These checks require the configured runtime described in README.md.
+Never interpret static checks as a completed production acceptance test.
